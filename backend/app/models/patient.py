@@ -2,6 +2,7 @@ import uuid
 from datetime import datetime
 
 from sqlalchemy import Column, String, Date, Float, Text, DateTime, Time
+from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 
 from app.db.database import Base
@@ -31,3 +32,9 @@ class Patient(Base):
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    medications = relationship(
+    "Medication",
+    back_populates="patient",
+    cascade="all, delete"
+)
