@@ -1,7 +1,16 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import Column, String, Date, Float, Text, DateTime, Time
+from sqlalchemy import (
+    Column,
+    String,
+    Date,
+    Float,
+    Text,
+    DateTime,
+    Time,
+    ForeignKey,
+)
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 
@@ -12,6 +21,13 @@ class Patient(Base):
     __tablename__ = "patients"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+
+    user_id = Column(
+    UUID(as_uuid=True),
+    ForeignKey("users.id"),
+    unique=True,
+    nullable=False,
+    )
 
     full_name = Column(String(100), nullable=False)
     date_of_birth = Column(Date, nullable=False)
@@ -32,6 +48,11 @@ class Patient(Base):
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    user = relationship(
+    "User",
+    back_populates="patient",
+    )
     
     medications = relationship(
     "Medication",

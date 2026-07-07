@@ -1,9 +1,11 @@
 from sqlalchemy.orm import Session
 
+from fastapi.security import OAuth2PasswordRequestForm
+
 from app.auth.hashing import hash_password, verify_password
 from app.auth.jwt import create_access_token
 from app.models.user import User
-from app.schemas.user import UserLogin, UserRegister
+from app.schemas.user import UserRegister
 
 
 def register_user(db: Session, user: UserRegister):
@@ -30,10 +32,14 @@ def register_user(db: Session, user: UserRegister):
     return db_user
 
 
-def login_user(db: Session, user: UserLogin):
+def login_user(
+    db: Session,
+    form_data: OAuth2PasswordRequestForm,
+) -> str | None:
+
     db_user = (
         db.query(User)
-        .filter(User.email == user.email)
+        .filter(User.email == form_data.username)
         .first()
     )
 
@@ -41,7 +47,7 @@ def login_user(db: Session, user: UserLogin):
         return None
 
     if not verify_password(
-        user.password,
+        form_data.password,
         db_user.password_hash,
     ):
         return None

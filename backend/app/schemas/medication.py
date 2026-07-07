@@ -6,7 +6,6 @@ from pydantic import BaseModel
 
 
 class MedicationCreate(BaseModel):
-    patient_id: UUID
 
     name: str
 

@@ -4,6 +4,7 @@ from enum import Enum as PyEnum
 
 from sqlalchemy import Column, DateTime, Enum, String
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
 from app.db.database import Base
 
@@ -34,4 +35,11 @@ class User(Base):
     created_at = Column(
         DateTime,
         default=datetime.utcnow
+    )
+
+    patient = relationship(
+    "Patient",
+    back_populates="user",
+    uselist=False,
+    cascade="all, delete",
     )

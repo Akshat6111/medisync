@@ -55,3 +55,9 @@ class Medication(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     patient = relationship("Patient", back_populates="medications")
+
+    logs = relationship(
+    "MedicationLog",
+    back_populates="medication",
+    cascade="all, delete",
+    )
