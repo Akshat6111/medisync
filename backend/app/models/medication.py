@@ -10,6 +10,7 @@ from sqlalchemy import (
     Integer,
     String,
     Text,
+    Float,
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
@@ -53,6 +54,8 @@ class Medication(Base):
     notes = Column(Text)
 
     created_at = Column(DateTime, default=datetime.utcnow)
+
+    min_gap_hours = Column(Float, nullable=True)
 
     patient = relationship("Patient", back_populates="medications")
 

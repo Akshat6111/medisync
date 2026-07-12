@@ -7,21 +7,19 @@ from pydantic import BaseModel
 from app.models.medication_log import MedicationStatus
 
 
-class MedicationLogCreate(BaseModel):
-    medication_id: UUID
-
-    scheduled_time: datetime
-
-    taken_time: Optional[datetime] = None
-
+class MedicationLogUpdate(BaseModel):
     status: MedicationStatus
-
     notes: Optional[str] = None
 
 
-class MedicationLogResponse(MedicationLogCreate):
+class MedicationLogResponse(BaseModel):
     id: UUID
-
+    medication_id: UUID
+    dose_index: int
+    scheduled_time: datetime
+    taken_time: Optional[datetime]
+    status: MedicationStatus
+    notes: Optional[str]
     created_at: datetime
 
     model_config = {
