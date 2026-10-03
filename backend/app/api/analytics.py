@@ -35,11 +35,4 @@ def read_adherence_analytics(
         db,
         current_user,
     )
-
-    if analytics is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Patient not found",
-        )
-
     return analytics

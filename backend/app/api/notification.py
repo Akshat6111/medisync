@@ -60,3 +60,24 @@ def mark_read(
         )
 
     return notification
+
+
+@router.post(
+    "/trigger",
+    summary="Trigger reminder checks manually",
+    description="Manually checks for due and overdue medication logs, creates notifications, and sends email reminders without duplication.",
+)
+def trigger_notifications(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    from app.services.notification_service import get_current_patient, create_due_notifications
+    patient = get_current_patient(db, current_user)
+    if not patient:
+        raise HTTPException(status_code=404, detail="Patient profile not found")
+    created_count = create_due_notifications(db, patient.id)
+    return {
+        "status": "success",
+        "new_notifications_created": created_count,
+        "message": f"{created_count} new reminder(s) generated and delivered." if created_count > 0 else "All reminders already delivered (no duplicates)."
+    }

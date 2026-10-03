@@ -1,0 +1,12 @@
+{
+  "name": "medisync",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MediSync AI Monorepo Scripts",
+  "scripts": {
+    "backend": "npm run dev:backend",
+    "frontend": "npm run dev:frontend",
+    "dev:backend": "powershell -Command \"cd backend; .\\venv\\Scripts\\python.exe run.py\"",
+    "dev:frontend": "npm run dev --prefix frontend"
+  }
+}

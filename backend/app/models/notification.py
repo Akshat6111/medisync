@@ -26,7 +26,7 @@ class Notification(Base):
 
     medication_log_id = Column(
         UUID(as_uuid=True),
-        ForeignKey("medication_logs.id"),
+        ForeignKey("medication_logs.id", ondelete="CASCADE"),
         nullable=False,
     )
 
@@ -57,5 +57,6 @@ class Notification(Base):
     )
 
     medication_log = relationship(
-        "MedicationLog"
+        "MedicationLog",
+        back_populates="notifications",
     )

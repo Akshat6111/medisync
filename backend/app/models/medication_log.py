@@ -45,7 +45,7 @@ class MedicationLog(Base):
 
     medication_id = Column(
         UUID(as_uuid=True),
-        ForeignKey("medications.id"),
+        ForeignKey("medications.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
@@ -85,3 +85,14 @@ class MedicationLog(Base):
         "Medication",
         back_populates="logs",
     )
+
+    notifications = relationship(
+        "Notification",
+        back_populates="medication_log",
+        cascade="all, delete",
+        passive_deletes=True,
+    )
+
+    @property
+    def medication_name(self) -> str:
+        return self.medication.name if self.medication else ""

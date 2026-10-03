@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from uuid import UUID
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app.core.time import IST, now_ist
 
 from app.models.medication import Medication
@@ -78,6 +78,7 @@ def get_my_medication_logs(
     return (
         db.query(MedicationLog)
         .join(Medication)
+        .options(joinedload(MedicationLog.medication))
         .filter(
             Medication.patient_id == patient.id
         )
@@ -106,6 +107,7 @@ def update_medication_log(
     log = (
         db.query(MedicationLog)
         .join(Medication)
+        .options(joinedload(MedicationLog.medication))
         .filter(
             MedicationLog.id == log_id,
             Medication.patient_id == patient.id,
@@ -198,5 +200,10 @@ def delete_medication_log(
     if log:
         db.delete(log)
         db.commit()
+        try:
+            from app.ai.cache import clear_session_cache
+            clear_session_cache(user_id=current_user.id)
+        except Exception:
+            pass
 
     return log

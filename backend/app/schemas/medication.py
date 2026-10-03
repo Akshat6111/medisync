@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import Optional
+from typing import List, Optional
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -25,6 +25,7 @@ class MedicationCreate(BaseModel):
     start_date: date
 
     notes: Optional[str] = None
+    scheduled_time: Optional[List[str]] = None
 
 
 class MedicationResponse(MedicationCreate):

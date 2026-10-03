@@ -55,7 +55,22 @@ class Patient(Base):
     )
     
     medications = relationship(
-    "Medication",
-    back_populates="patient",
-    cascade="all, delete"
-)
+        "Medication",
+        back_populates="patient",
+        cascade="all, delete",
+    )
+
+    reports = relationship(
+        "LabReport",
+        back_populates="patient",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
+
+    cycle_logs = relationship(
+        "CycleLog",
+        back_populates="patient",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
+

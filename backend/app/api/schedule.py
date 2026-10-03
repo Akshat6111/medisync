@@ -18,7 +18,7 @@ def get_my_schedule(
     patient = db.query(Patient).filter(Patient.user_id == current_user.id).first()
 
     if patient is None:
-        raise HTTPException(status_code=404, detail="Patient profile not found for this user.")
+        return {"success": True, "schedule": [], "conflict": None}
 
     result = generate_schedule(db, patient.id)
     return result

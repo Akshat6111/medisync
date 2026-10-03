@@ -1,3 +1,4 @@
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
@@ -6,7 +7,7 @@ from app.config.settings import settings
 # Creates the connection to PostgreSQL
 engine = create_engine(
     settings.DATABASE_URL,
-    echo=True
+    echo=os.getenv("SQL_ECHO", "false").lower() == "true",
 )
 
 # Creates a new database session for every request

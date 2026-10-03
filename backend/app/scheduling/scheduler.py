@@ -52,8 +52,25 @@ def build_dose_instances(medications: List[Any]) -> List[Dict]:
     return instances
 
 
-def get_min_gap_slots(medication) -> int:
-    hours = 24 / medication.frequency_per_day
+def get_waking_hours(patient) -> float:
+    """Calculate the patient's waking window in hours."""
+    wake_mins = patient.wake_up_time.hour * 60 + patient.wake_up_time.minute
+    sleep_mins = patient.sleep_time.hour * 60 + patient.sleep_time.minute
+    if sleep_mins < wake_mins:
+        # Cross-midnight sleep window (e.g., wake at 08:00, sleep at 00:30)
+        return (sleep_mins + 24 * 60 - wake_mins) / 60.0
+    return (sleep_mins - wake_mins) / 60.0
+
+
+def get_min_gap_slots(medication, patient) -> int:
+    """
+    Calculate minimum spacing between doses of the same medication using the
+    patient's actual waking window: (sleep_time - wake_up_time in hours) / frequency_per_day.
+    """
+    if medication.frequency_per_day <= 1:
+        return 0
+    waking_hours = get_waking_hours(patient)
+    hours = waking_hours / medication.frequency_per_day
     return int((hours * 60) / SLOT_MINUTES)
 
 
@@ -61,6 +78,7 @@ def build_constraint_graph(
     dose_instances,
     med_by_id,
     interactions,
+    patient,
 ):
     graph: Dict[str, List] = {
         d["id"]: []
@@ -78,7 +96,8 @@ def build_constraint_graph(
     # Same medication spacing
     for med_id, dose_ids in by_med.items():
         gap = get_min_gap_slots(
-            med_by_id[med_id]
+            med_by_id[med_id],
+            patient,
         )
 
         for i in range(len(dose_ids)):
@@ -190,7 +209,7 @@ def solve_schedule(
             return None
         domains[dose["id"]] = domain
 
-    graph = build_constraint_graph(dose_instances, med_by_id, interactions)
+    graph = build_constraint_graph(dose_instances, med_by_id, interactions, patient)
 
     solution = backtrack({}, domains, graph)
     if solution is None:

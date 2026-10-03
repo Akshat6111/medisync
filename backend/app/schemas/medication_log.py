@@ -15,6 +15,7 @@ class MedicationLogUpdate(BaseModel):
 class MedicationLogResponse(BaseModel):
     id: UUID
     medication_id: UUID
+    medication_name: str
     dose_index: int
     scheduled_time: datetime
     taken_time: Optional[datetime]

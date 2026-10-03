@@ -61,3 +61,15 @@ urllib3==2.7.0
 uvicorn==0.49.0
 watchfiles==1.2.0
 websockets==16.0
+groq
+pinecone-client
+sentence-transformers
+langchain-community
+langchain-text-splitters
+pdfplumber
+pytesseract
+pdf2image
+rapidfuzz
+rapidocr-onnxruntime
+pypdfium2
+playwright

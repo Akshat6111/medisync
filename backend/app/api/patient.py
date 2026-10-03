@@ -12,6 +12,7 @@ from app.services.patient_service import (
     delete_patient,
     get_my_patient,
     get_patient_by_id,
+    update_patient,
 )
 
 router = APIRouter(
@@ -111,3 +112,27 @@ def remove_patient(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Patient not found",
         )
+
+
+@router.put(
+    "/",
+    response_model=PatientResponse,
+)
+def edit_my_patient(
+    patient: PatientCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    updated = update_patient(
+        db,
+        patient,
+        current_user,
+    )
+
+    if not updated:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Patient profile not found",
+        )
+
+    return updated

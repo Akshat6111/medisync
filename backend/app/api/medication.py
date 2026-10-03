@@ -15,6 +15,8 @@ from app.services.medication_service import (
     delete_medication,
     get_medication_by_id,
     get_my_medications,
+    update_medication,
+    sync_manual_medication_logs,
 )
 
 router = APIRouter(
@@ -46,6 +48,26 @@ def add_medication(
         )
 
     return new_medication
+
+
+@router.post(
+    "/sync-manual-logs",
+    status_code=status.HTTP_200_OK,
+)
+def trigger_manual_schedule_sync(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    from app.models.patient import Patient
+    patient = db.query(Patient).filter(Patient.user_id == current_user.id).first()
+    if not patient:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Patient profile not found",
+        )
+
+    synced_count = sync_manual_medication_logs(db, patient.id)
+    return {"success": True, "synced_count": synced_count}
 
 
 @router.get(
@@ -108,3 +130,29 @@ def remove_medication(
         )
 
     return
+
+
+@router.put(
+    "/{medication_id}",
+    response_model=MedicationResponse,
+)
+def edit_medication(
+    medication_id: UUID,
+    medication: MedicationCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    updated = update_medication(
+        db,
+        medication_id,
+        medication,
+        current_user,
+    )
+
+    if not updated:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Medication not found",
+        )
+
+    return updated

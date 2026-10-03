@@ -12,6 +12,7 @@ from app.models.medication_log import (
 from app.models.notification import Notification
 from app.models.patient import Patient
 from app.models.user import User
+from app.services.email_service import send_email_reminder
 
 
 REMINDER_WINDOW_MINUTES = 15
@@ -33,8 +34,12 @@ def get_current_patient(
 def create_due_notifications(
     db: Session,
     patient_id,
-):
+) -> int:
     now = now_ist()
+
+    # Get user email for reminder delivery
+    patient = db.query(Patient).filter(Patient.id == patient_id).first()
+    recipient_email = patient.user.email if patient and patient.user else None
 
     reminder_until = now + timedelta(
         minutes=REMINDER_WINDOW_MINUTES
@@ -50,6 +55,8 @@ def create_due_notifications(
         )
         .all()
     )
+
+    created_count = 0
 
     for log in logs:
         scheduled_time = log.scheduled_time
@@ -104,8 +111,18 @@ def create_due_notifications(
         )
 
         db.add(notification)
+        created_count += 1
+
+        # Dispatch email reminder if user email is available
+        if recipient_email:
+            send_email_reminder(
+                to_email=recipient_email,
+                subject=f"MediSync Reminder: {title}",
+                message=message,
+            )
 
     db.commit()
+    return created_count
 
 
 def get_my_notifications(

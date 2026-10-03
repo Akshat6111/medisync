@@ -11,6 +11,7 @@ from sqlalchemy import (
     String,
     Text,
     Float,
+    JSON,
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
@@ -57,10 +58,13 @@ class Medication(Base):
 
     min_gap_hours = Column(Float, nullable=True)
 
+    scheduled_time = Column(JSON, nullable=True)
+
     patient = relationship("Patient", back_populates="medications")
 
     logs = relationship(
-    "MedicationLog",
-    back_populates="medication",
-    cascade="all, delete",
+        "MedicationLog",
+        back_populates="medication",
+        cascade="all, delete",
+        passive_deletes=True,
     )

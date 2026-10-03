@@ -25,7 +25,16 @@ def get_adherence_analytics(
     )
 
     if not patient:
-        return None
+        return {
+            "total_doses": 0,
+            "eligible_doses": 0,
+            "taken": 0,
+            "missed": 0,
+            "late": 0,
+            "skipped": 0,
+            "pending": 0,
+            "adherence_rate": 0.0,
+        }
 
     update_expired_logs(
         db,

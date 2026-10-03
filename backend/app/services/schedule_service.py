@@ -92,11 +92,13 @@ def sync_schedule_logs(
     day_start = datetime.combine(
         today,
         datetime.min.time(),
+        tzinfo=IST,
     )
 
     day_end = datetime.combine(
         today,
         datetime.max.time(),
+        tzinfo=IST,
     )
 
     for dose in schedule:
@@ -106,9 +108,9 @@ def sync_schedule_logs(
         ).time()
 
         scheduled_datetime = datetime.combine(
-        today,
-        scheduled_time,
-        tzinfo=IST,
+            today,
+            scheduled_time,
+            tzinfo=IST,
         )
 
         existing_log = (
@@ -127,6 +129,10 @@ def sync_schedule_logs(
         )
 
         if existing_log:
+            # If status is TAKEN, never overwrite its scheduled_time even if solver re-solves
+            if existing_log.status == MedicationStatus.TAKEN:
+                continue
+
             if (
                 existing_log.status
                 == MedicationStatus.PENDING

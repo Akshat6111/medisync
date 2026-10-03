@@ -88,3 +88,37 @@ def delete_patient(
         db.commit()
 
     return patient
+
+
+def update_patient(
+    db: Session,
+    patient: PatientCreate,
+    current_user: User,
+):
+    db_patient = (
+        db.query(Patient)
+        .filter(Patient.user_id == current_user.id)
+        .first()
+    )
+
+    if not db_patient:
+        return None
+
+    db_patient.full_name = patient.full_name
+    db_patient.date_of_birth = patient.date_of_birth
+    db_patient.gender = patient.gender
+    db_patient.height_cm = patient.height_cm
+    db_patient.weight_kg = patient.weight_kg
+    db_patient.blood_group = patient.blood_group
+    db_patient.allergies = patient.allergies
+    db_patient.medical_conditions = patient.medical_conditions
+    db_patient.wake_up_time = patient.wake_up_time
+    db_patient.breakfast_time = patient.breakfast_time
+    db_patient.lunch_time = patient.lunch_time
+    db_patient.dinner_time = patient.dinner_time
+    db_patient.sleep_time = patient.sleep_time
+
+    db.commit()
+    db.refresh(db_patient)
+
+    return db_patient
