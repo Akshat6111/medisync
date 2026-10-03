@@ -1,0 +1,196 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+@import "leaflet/dist/leaflet.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 1rem;
+
+  --background: oklch(0.985 0.005 180);
+  --foreground: oklch(0.22 0.03 220);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.03 220);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.03 220);
+
+  /* Teal primary */
+  --primary: oklch(0.62 0.11 190);
+  --primary-foreground: oklch(0.99 0.01 180);
+
+  --secondary: oklch(0.96 0.02 190);
+  --secondary-foreground: oklch(0.3 0.05 210);
+
+  --muted: oklch(0.965 0.008 220);
+  --muted-foreground: oklch(0.55 0.03 220);
+
+  --accent: oklch(0.94 0.04 190);
+  --accent-foreground: oklch(0.35 0.09 195);
+
+  --destructive: oklch(0.62 0.22 25);
+  --destructive-foreground: oklch(0.99 0.01 180);
+
+  --success: oklch(0.68 0.16 150);
+  --success-foreground: oklch(0.99 0.01 180);
+  --warning: oklch(0.78 0.15 75);
+  --warning-foreground: oklch(0.25 0.05 60);
+  --info: oklch(0.66 0.14 240);
+  --info-foreground: oklch(0.99 0.01 180);
+
+  --border: oklch(0.92 0.01 210);
+  --input: oklch(0.92 0.01 210);
+  --ring: oklch(0.62 0.11 190);
+
+  --sidebar: oklch(0.99 0.005 190);
+  --sidebar-foreground: oklch(0.3 0.03 220);
+  --sidebar-primary: oklch(0.62 0.11 190);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.94 0.04 190);
+  --sidebar-accent-foreground: oklch(0.35 0.09 195);
+  --sidebar-border: oklch(0.92 0.01 210);
+  --sidebar-ring: oklch(0.62 0.11 190);
+}
+
+.dark {
+  --background: oklch(0.18 0.02 220);
+  --foreground: oklch(0.96 0.01 190);
+  --card: oklch(0.22 0.025 220);
+  --card-foreground: oklch(0.96 0.01 190);
+  --popover: oklch(0.22 0.025 220);
+  --popover-foreground: oklch(0.96 0.01 190);
+  --primary: oklch(0.7 0.13 190);
+  --primary-foreground: oklch(0.15 0.02 220);
+  --secondary: oklch(0.28 0.03 220);
+  --secondary-foreground: oklch(0.96 0.01 190);
+  --muted: oklch(0.26 0.02 220);
+  --muted-foreground: oklch(0.72 0.02 210);
+  --accent: oklch(0.32 0.05 195);
+  --accent-foreground: oklch(0.96 0.02 190);
+  --destructive: oklch(0.65 0.2 25);
+  --destructive-foreground: oklch(0.99 0.01 180);
+  --success: oklch(0.7 0.16 150);
+  --success-foreground: oklch(0.15 0.02 220);
+  --warning: oklch(0.8 0.15 75);
+  --warning-foreground: oklch(0.2 0.03 60);
+  --info: oklch(0.7 0.14 240);
+  --info-foreground: oklch(0.15 0.02 220);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.7 0.13 190);
+  --sidebar: oklch(0.2 0.025 220);
+  --sidebar-foreground: oklch(0.92 0.01 190);
+  --sidebar-primary: oklch(0.7 0.13 190);
+  --sidebar-primary-foreground: oklch(0.15 0.02 220);
+  --sidebar-accent: oklch(0.3 0.05 195);
+  --sidebar-accent-foreground: oklch(0.96 0.02 190);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.7 0.13 190);
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+}
+
+@utility bg-hero-mint {
+  background-image: linear-gradient(135deg, oklch(0.96 0.05 190) 0%, oklch(0.98 0.03 170) 60%, oklch(0.99 0.01 180) 100%);
+}
+.dark .bg-hero-mint {
+  background-image: linear-gradient(135deg, oklch(0.26 0.05 200) 0%, oklch(0.22 0.03 210) 60%, oklch(0.2 0.02 220) 100%);
+}
+
+/* Leaflet & Map Custom Styling */
+.leaflet-container {
+  font-family: inherit;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+.leaflet-popup-content-wrapper {
+  background: var(--card);
+  color: var(--card-foreground);
+  border-radius: 1rem;
+  padding: 0;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  line-height: 1.4;
+}
+
+.leaflet-popup-tip {
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+@keyframes radar-pulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  70% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.radar-pulse-ring {
+  animation: radar-pulse 2s cubic-bezier(0.1, 0.45, 0.1, 1) infinite;
+}
+

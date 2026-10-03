@@ -18,11 +18,15 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Install Playwright browser and dependencies for price scraping
+RUN python -m playwright install --with-deps chromium
+
 # Copy application source code
 COPY . .
 
 # Expose backend port
+ENV PORT=8000
 EXPOSE 8000
 
-# Start uvicorn
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Start uvicorn supporting dynamic $PORT from cloud platforms (Render, Railway, Fly.io, Cloud Run)
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
